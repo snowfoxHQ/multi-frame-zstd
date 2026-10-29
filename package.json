@@ -1,0 +1,31 @@
+{
+  "name": "multi-frame-zstd",
+  "version": "0.1.0",
+  "description": "解码多帧拼接的 zstd 数据。Node 内置 zstd 只解第一帧，这个包按 RFC 8878 帧边界逐帧解码，零依赖。",
+  "type": "module",
+  "license": "MIT",
+  "author": "foxing",
+  "keywords": [
+    "zstd",
+    "multi-frame",
+    "decompress",
+    "zstandard",
+    "log"
+  ],
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=23.8.0"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-isolation=none test/multi-frame-zstd.test.mjs",
+    "parity": "node scripts/parity-check.mjs"
+  }
+}
