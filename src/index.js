@@ -1,14 +1,10 @@
 /**
  * multi-frame-zstd —— 解码「多个 zstd 帧首尾相接」的数据。
  *
- * 为什么需要它：Node 内置的 `zlib.zstdDecompressSync()` 与 zstd 流**都只解第一帧**
- * （实测：两帧拼接后只吐出第一帧的内容）。而很多日志系统是**每次 flush 追加一个独立帧**
- * —— dsh 的 `session.v4.jsonl.zstd` 就是这样（实测 10877B 的文件共 6 帧，首帧仅 187B）。
- * 不按帧边界逐帧解码，就只能读到 header，会误判成"文件里没有数据"。
- *
- * 生态里现成的解法都只支持单帧：fzstd、zstd-codec(WASM)、@mongodb-js/zstd(原生绑定)。
- * 这个包自己解析 RFC 8878 的帧结构（帧头 + 块序列），切出每一帧的精确字节范围，
- * 再交给 Node 内置的 zstd 解压器，零依赖、零原生模块。
+* 为什么需要它：Node 内置的 `zlib.zstdDecompressSync()` 在一次性解压时
+* 只解第一帧；`createZstdDecompress()` 流式 API 在 v24.18.0 实测同样只
+* 输出第一帧（Node 官方文档称会跨帧解码，实际行为请以你的版本实测为准）。
+* 见 README「为什么需要它」的实测表。
  */
 import { zstdDecompressSync } from 'node:zlib'
 
